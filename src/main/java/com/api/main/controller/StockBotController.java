@@ -51,5 +51,13 @@ public class StockBotController {
 	public String getMessage() {
 		return "Welcome";
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, path = "/api/stock/test")
+    public String getTestStockPrice()
+    {
+		System.err.println("Test method");
+		System.out.println("Printing test");
+		return "test return";
+    }
 }
 
