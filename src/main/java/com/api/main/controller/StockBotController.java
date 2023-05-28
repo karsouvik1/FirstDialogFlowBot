@@ -27,9 +27,9 @@ public class StockBotController {
 		ticker = ticker+".NS";
 		String url = "https://query1.finance.yahoo.com/v11/finance/quoteSummary";
 		url = url+"/"+ticker+"?modules=financialData";
-		
+		System.out.println("Print url:"+url);
 		String currentPrice = "";
-		try {
+		/*try {
 			String jsonString = restTemplate.getForObject(url, String.class);
 			
 			JSONObject jsonObj = new JSONObject(jsonString);
@@ -40,7 +40,7 @@ public class StockBotController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		if(currentPrice != null && !currentPrice.equals(""))
 			return currentPrice;
 		
