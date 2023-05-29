@@ -56,10 +56,15 @@ public class StockBotController {
 		}
 		if(currentPrice != null && !currentPrice.equals("")) {
 			JSONObject retJsonObject = new JSONObject();
-			retJsonObject.append("speech:", currentPrice);
-			retJsonObject.append("displayText:", currentPrice);
-			retJsonObject.append("source:", "stock-bot-api");
-			System.out.println("return object:"+retJsonObject.toString());
+			JSONArray newJsonArray = new JSONArray();
+			retJsonObject.put("fulfillmentMessages", newJsonArray);
+			JSONObject textJsonObjectRoot = new JSONObject();
+			JSONObject textJsonObject = new JSONObject();
+			JSONArray textJsonArray = new JSONArray();
+			textJsonArray.put(currentPrice);
+			textJsonObject.put("text", textJsonArray);
+			textJsonObjectRoot.put("text", textJsonObject);
+			newJsonArray.put(0,textJsonObjectRoot);
 			return retJsonObject.toString();
 		}
 		
