@@ -52,7 +52,7 @@ public class StockBotController {
 	public String getMessage() {
 		System.err.println("Welcome Message");
 		System.out.println("Welcome to app");
-		return "Welcome";
+		return "Welcome to app";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, path = "/api/stock/test")
