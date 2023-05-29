@@ -6,6 +6,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,14 +50,16 @@ public class StockBotController {
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/")
 	public String getMessage() {
+		System.err.println("Welcome Message");
+		System.out.println("Welcome to app");
 		return "Welcome";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, path = "/api/stock/test")
-    public String getTestStockPrice()
+    public String getTestStockPrice(@RequestBody String name)
     {
-		System.err.println("Test method");
-		System.out.println("Printing test");
+		System.err.println("Test method"+name);
+		System.out.println("Printing test"+name);
 		return "test return";
     }
 }
