@@ -1,8 +1,8 @@
 package com.api.main.controller;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +30,7 @@ public class StockBotController {
 		url = url+"/"+ticker+"?modules=financialData";
 		System.out.println("Printing Rest url:"+url);
 		String currentPrice = "";
-		System.out.println("Before try......");
+		System.out.println("Before try block......");
 		try {
 			System.out.println("Calling rest to get stock price");
 			String jsonString = restTemplate.getForObject(url, String.class);
