@@ -22,13 +22,21 @@ public class StockBotController {
 		this.restTemplate = builder.build();
 	}
 
-	@PostMapping(path = "/api/stock/stockPrice/{ticker}")
-    public String getStockPrice(@PathVariable(value="ticker") String ticker)
+	@PostMapping(path = "/api/stock/stockPrice")
+    public String getStockPrice(@RequestBody String request)
     {
+		System.out.println("Request from dialogflow:"+request);
+		JSONObject dialoflowJsonObject = new JSONObject(request);
+		System.out.println("dialoflowJsonObject:"+dialoflowJsonObject);
+		
+		String ticker = (String) ((JSONObject)((JSONObject)dialoflowJsonObject.get("queryResult")).get("parameters")).get("stock");
+		System.out.println("Tciket send :"+ticker);
+		
 		ticker = ticker+".NS";
 		String url = "https://query1.finance.yahoo.com/v11/finance/quoteSummary";
 		url = url+"/"+ticker+"?modules=financialData";
 		System.out.println("Printing Rest url:"+url);
+		
 		String currentPrice = "";
 		System.out.println("Before try block......");
 		try {
