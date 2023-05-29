@@ -31,8 +31,9 @@ public class StockBotController {
 		System.out.println("Print url:"+url);
 		String currentPrice = "";
 		try {
+			System.out.println("Calling rest to get stock price");
 			String jsonString = restTemplate.getForObject(url, String.class);
-			
+			System.err.println("After Calling rest to get stock price:"+jsonString);
 			JSONObject jsonObj = new JSONObject(jsonString);
 
 			currentPrice = (String) ((JSONObject) ((JSONObject) ((JSONObject) ((JSONArray) ((JSONObject) jsonObj
@@ -41,6 +42,7 @@ public class StockBotController {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			System.err.println("Error getting stock price"+e.getMessage());
 			e.printStackTrace();
 		}
 		if(currentPrice != null && !currentPrice.equals(""))
