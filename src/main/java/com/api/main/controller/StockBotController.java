@@ -54,8 +54,14 @@ public class StockBotController {
 			System.err.println("Error getting stock price"+e.getMessage());
 			e.printStackTrace();
 		}
-		if(currentPrice != null && !currentPrice.equals(""))
-			return currentPrice;
+		if(currentPrice != null && !currentPrice.equals("")) {
+			JSONObject retJsonObject = new JSONObject();
+			retJsonObject.append("speech:", currentPrice);
+			retJsonObject.append("displayText:", currentPrice);
+			retJsonObject.append("source:", "stock-bot-api");
+			System.out.println("return object:"+retJsonObject.toString());
+			return retJsonObject.toString();
+		}
 		
         return "Please enter proper Stock symbol";
     }
