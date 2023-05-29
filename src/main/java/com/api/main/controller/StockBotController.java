@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,7 @@ public class StockBotController {
 		JSONObject dialoflowJsonObject = new JSONObject(request);
 		System.out.println("dialoflowJsonObject:"+dialoflowJsonObject);
 		
-		String ticker = (String) ((JSONObject)((JSONObject)dialoflowJsonObject.get("queryResult")).get("parameters")).get("stock");
+		String ticker = (String) ((JSONObject)((JSONObject)dialoflowJsonObject.get("queryResult")).get("parameters")).get("any");
 		System.out.println("Tciket send :"+ticker);
 		
 		ticker = ticker+".NS";
