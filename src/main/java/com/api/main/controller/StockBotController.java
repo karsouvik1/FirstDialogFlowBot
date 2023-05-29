@@ -30,18 +30,19 @@ public class StockBotController {
 		url = url+"/"+ticker+"?modules=financialData";
 		System.out.println("Print url:"+url);
 		String currentPrice = "";
-		/*try {
+		try {
 			String jsonString = restTemplate.getForObject(url, String.class);
 			
 			JSONObject jsonObj = new JSONObject(jsonString);
 
 			currentPrice = (String) ((JSONObject) ((JSONObject) ((JSONObject) ((JSONArray) ((JSONObject) jsonObj
 					.get("quoteSummary")).get("result")).get(0)).get("financialData")).get("currentPrice")).get("fmt");
+			System.out.println("price for stock "+ticker+" is "+currentPrice);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		if(currentPrice != null && !currentPrice.equals(""))
 			return currentPrice;
 		
