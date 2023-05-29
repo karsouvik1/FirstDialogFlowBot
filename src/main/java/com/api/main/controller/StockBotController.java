@@ -28,8 +28,9 @@ public class StockBotController {
 		ticker = ticker+".NS";
 		String url = "https://query1.finance.yahoo.com/v11/finance/quoteSummary";
 		url = url+"/"+ticker+"?modules=financialData";
-		System.out.println("Print url:"+url);
+		System.out.println("Printing Rest url:"+url);
 		String currentPrice = "";
+		System.out.println("Before try......");
 		try {
 			System.out.println("Calling rest to get stock price");
 			String jsonString = restTemplate.getForObject(url, String.class);
