@@ -60,7 +60,7 @@ public class StockBotController {
 			JSONObject textJsonObjectRoot = new JSONObject();
 			JSONObject textJsonObject = new JSONObject();
 			JSONArray textJsonArray = new JSONArray();
-			textJsonArray.put(currentPrice);
+			textJsonArray.put("Price for Stock "+ ticker + " is "+ currentPrice+ " \n Do you want to know price for another stock?");
 			textJsonObject.put("text", textJsonArray);
 			textJsonObjectRoot.put("text", textJsonObject);
 			newJsonArray.put(0,textJsonObjectRoot);
