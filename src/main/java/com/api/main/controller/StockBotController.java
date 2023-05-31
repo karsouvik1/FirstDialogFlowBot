@@ -1,73 +1,64 @@
 package com.api.main.controller;
 
+import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+
+import com.api.main.util.MANHJsonUtil;
+import com.api.main.util.TestUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class StockBotController {
 	
-	private final RestTemplate restTemplate;
-
 	@Autowired
-	public StockBotController(RestTemplateBuilder builder) {
-		this.restTemplate = builder.build();
-	}
-
-	@PostMapping(path = "/api/stock/stockPrice")
-    public String getStockPrice(@RequestBody String request)
+	TestUtil testUtil;
+	
+	@Autowired
+	MANHJsonUtil manhJsonUtil;
+	
+	@PostMapping(path = "/api/webhook")
+    public String processWebhook(@RequestBody String request) throws JsonMappingException, JsonProcessingException
     {
+		String retString = "";
 		System.out.println("Request from dialogflow:"+request);
 		JSONObject dialoflowJsonObject = new JSONObject(request);
 		System.out.println("dialoflowJsonObject:"+dialoflowJsonObject);
 		
-		String ticker = (String) ((JSONObject)((JSONObject)dialoflowJsonObject.get("queryResult")).get("parameters")).get("any");
-		System.out.println("Tciket send :"+ticker);
+		String action = (String) ((JSONObject)dialoflowJsonObject.get("queryResult")).get("action");
+		System.out.println("Action from dialog flow:"+action);
+		String json = (String) ((JSONObject)((JSONObject)dialoflowJsonObject.get("queryResult")).get("parameters")).get("any");
 		
-		ticker = ticker+".NS";
-		String url = "https://query1.finance.yahoo.com/v11/finance/quoteSummary";
-		url = url+"/"+ticker+"?modules=financialData";
-		System.out.println("Printing Rest url:"+url);
-		
-		String currentPrice = "";
-		System.out.println("Before try block......");
-		try {
-			System.out.println("Calling rest to get stock price");
-			String jsonString = restTemplate.getForObject(url, String.class);
-			System.err.println("After Calling rest to get stock price:"+jsonString);
-			JSONObject jsonObj = new JSONObject(jsonString);
-
-			currentPrice = (String) ((JSONObject) ((JSONObject) ((JSONObject) ((JSONArray) ((JSONObject) jsonObj
-					.get("quoteSummary")).get("result")).get(0)).get("financialData")).get("currentPrice")).get("fmt");
-			System.out.println("price for stock "+ticker+" is "+currentPrice);
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.err.println("Error getting stock price"+e.getMessage());
-			e.printStackTrace();
+		if("stcok-quote".equals(action)) {
+			System.out.println("ticker send :"+json);
+			System.out.println("calling stock information");
+			retString = testUtil.stockPrice(json);
+			retString = formatResponse(retString);
 		}
-		if(currentPrice != null && !currentPrice.equals("")) {
-			JSONObject retJsonObject = new JSONObject();
-			JSONArray newJsonArray = new JSONArray();
-			retJsonObject.put("fulfillmentMessages", newJsonArray);
-			JSONObject textJsonObjectRoot = new JSONObject();
-			JSONObject textJsonObject = new JSONObject();
-			JSONArray textJsonArray = new JSONArray();
-			textJsonArray.put("Price for Stock "+ ticker + " is "+ currentPrice+ " \n Do you want to know price for another stock?");
-			textJsonObject.put("text", textJsonArray);
-			textJsonObjectRoot.put("text", textJsonObject);
-			newJsonArray.put(0,textJsonObjectRoot);
-			return retJsonObject.toString();
+		if("json-to-vm".equals(action)) {
+			System.out.println("Calling json to vm");
+			System.out.println("json string is >>>>>>"+json);
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, Object> jsonElements = mapper.readValue(json, new TypeReference<Map<String, Object>>() {
+		        });
+			StringBuffer vmTeamplate = new StringBuffer();
+	        String keyVMTeamplate = "";
+			StringBuffer retStringBuffer = manhJsonUtil.convertToVelocity(jsonElements, vmTeamplate, keyVMTeamplate, null);
+			retString = retStringBuffer.toString();
+			retString = formatResponse(retString);
 		}
 		
-        return "Please enter proper Stock symbol";
+		return retString;
     }
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/")
@@ -84,5 +75,19 @@ public class StockBotController {
 		System.out.println("Printing test"+name);
 		return "test return";
     }
+	
+	private String formatResponse(String response) {
+		JSONObject retJsonObject = new JSONObject();
+		JSONArray newJsonArray = new JSONArray();
+		retJsonObject.put("fulfillmentMessages", newJsonArray);
+		JSONObject textJsonObjectRoot = new JSONObject();
+		JSONObject textJsonObject = new JSONObject();
+		JSONArray textJsonArray = new JSONArray();
+		textJsonArray.put(response);
+		textJsonObject.put("text", textJsonArray);
+		textJsonObjectRoot.put("text", textJsonObject);
+		newJsonArray.put(0, textJsonObjectRoot);
+		return retJsonObject.toString();
+	}
 }
 
