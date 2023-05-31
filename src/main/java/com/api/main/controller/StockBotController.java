@@ -54,7 +54,9 @@ public class StockBotController {
 			StringBuffer vmTeamplate = new StringBuffer();
 	        String keyVMTeamplate = "";
 			StringBuffer retStringBuffer = manhJsonUtil.convertToVelocity(jsonElements, vmTeamplate, keyVMTeamplate, null);
+			retStringBuffer.append("${JSONUtils.mapToJson($document.getMap())}");
 			retString = retStringBuffer.toString();
+			retString = "velocity template for the JSON is \n" + retString;
 			retString = formatResponse(retString);
 		}
 		
